@@ -6,7 +6,7 @@
 /*   By: mjuicha <mjuicha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 13:22:12 by mjuicha           #+#    #+#             */
-/*   Updated: 2024/12/30 18:04:52 by mjuicha          ###   ########.fr       */
+/*   Updated: 2025/01/01 19:04:38 by mjuicha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 # define SUCCESS    1
 # define FAILURE    0
+
+# define WIDTH      480
+# define HEIGHT     320
 
 # define ERROR_ARG "\033[31mError: Wrong number of arguments\n\033[0m"
 # define ERROR_EXT "\033[31mError: Wrong extension\n\033[0m"
@@ -27,18 +30,36 @@
 # include <fcntl.h>
 # include <math.h>
 # include <mlx.h>
+# include "get_next_line.h"
+
+typedef struct s_map
+{
+    char        *line;
+    struct s_map *next;
+}               t_map;
+
+typedef struct s_info
+{
+    int     height;
+    int     width;
+}               t_info;
 
 typedef struct s_game
 {
     void    *mlx;
     void    *mlx_win;
-    int     fd_map;
+    char    **map;
+    t_info  *info;
+    int     width;
+    int     height;
+    int     mapfd;
 }               t_game;
 
 /***********************  utils  ***********************/
 size_t  ft_strlen(const char *str);
 int     ft_strcmp(const char *s1, const char *s2);
 void	ft_putendl_fd(char *str, int fd);
+char	*ft_strdup(const char *s1);
 /***********************  init  ***********************/
 t_game   *init_cub(int ac, char **av);
 

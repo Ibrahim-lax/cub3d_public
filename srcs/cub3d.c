@@ -6,11 +6,11 @@
 /*   By: mjuicha <mjuicha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 13:22:02 by mjuicha           #+#    #+#             */
-/*   Updated: 2024/12/30 15:46:20 by mjuicha          ###   ########.fr       */
+/*   Updated: 2025/01/01 15:49:42 by mjuicha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 int	main(int ac, char **av)
 {

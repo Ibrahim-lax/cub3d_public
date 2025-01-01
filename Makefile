@@ -1,36 +1,28 @@
-SRCS = 
-SRCSBONUS =
-
-OBJS = $(SRCS:.c=.o)
-OBJSBONUS = $(SRCSBONUS:.c=.o)
+SRCS = $(wildcard get_next_line/*.c) $(wildcard srcs/*.c) $(wildcard srcs/utils/*.c) $(wildcard srcs/init_cub/*.c)
+OBJD = obj
+OBJS = $(patsubst %.c,$(OBJD)/%.o,$(SRCS))
 
 NAME = cub3D
-NAMEBONUS = cub3D_bonus
 
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
-MLXFLAGS = -Lmlx -lmlx -framework OpenGL -framework AppKit
+CC = cc
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+MLXFLAGS = -lmlx -framework OpenGL -framework AppKit
+
+$(OBJD)/%.o: %.c includes/cub3d.h
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(MAKE) -C mlx
 	$(CC) $(CFLAGS) $(MLXFLAGS) -o $(NAME) $(OBJS)
 
-bonus: $(NAMEBONUS)
-
-$(NAMEBONUS): $(OBJSBONUS)
-	$(MAKE) -C mlx
-	$(CC) $(CFLAGS) $(MLXFLAGS) -o $(NAMEBONUS) $(OBJSBONUS)
-
 clean:
-	$(MAKE) -C mlx clean
-	rm -f $(OBJS) $(OBJSBONUS)
+	rm -rf $(OBJD)
 
 fclean: clean
-	$(MAKE) -C mlx clean
-	rm -f $(NAME) $(NAMEBONUS)
+	rm -rf $(NAME)
 
 re: fclean all
 
-.PHONY: all bonus clean fclean re
+.PHONY: all clean fclean re
