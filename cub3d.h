@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjuicha <mjuicha@student.42.fr>            +#+  +:+       +#+        */
+/*   By: librahim <librahim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 13:22:12 by mjuicha           #+#    #+#             */
-/*   Updated: 2025/01/01 19:04:38 by mjuicha          ###   ########.fr       */
+/*   Updated: 2025/01/07 15:33:24 by librahim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,20 @@
 # include <fcntl.h>
 # include <math.h>
 # include <mlx.h>
-# include "get_next_line.h"
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
+char	*get_next_line(int fd);
+char	*empty_str(void);
+char	*ft_strchr(const char *str, int c);
+char	*ft_strjoin(char *str, char *buff);
+char	*the_line(char *str);
+char	*next_line(char *str);
+char	*read_line(int fd, char *str);
+
+
 
 typedef struct s_map
 {
@@ -56,7 +69,7 @@ typedef struct s_game
 }               t_game;
 
 /***********************  utils  ***********************/
-size_t  ft_strlen(const char *str);
+size_t  ft_strlen(char *str);
 int     ft_strcmp(const char *s1, const char *s2);
 void	ft_putendl_fd(char *str, int fd);
 char	*ft_strdup(const char *s1);
