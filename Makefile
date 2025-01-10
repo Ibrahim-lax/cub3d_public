@@ -5,7 +5,7 @@ OBJS = $(patsubst %.c,$(OBJD)/%.o,$(SRCS))
 NAME = cub3D
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror 
 MLXFLAGS = -lmlx -framework OpenGL -framework AppKit
 
 $(OBJD)/%.o: %.c includes/cub3d.h

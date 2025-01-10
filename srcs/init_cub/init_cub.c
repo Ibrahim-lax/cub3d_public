@@ -6,7 +6,7 @@
 /*   By: mjuicha <mjuicha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 13:34:45 by mjuicha           #+#    #+#             */
-/*   Updated: 2025/01/01 19:17:04 by mjuicha          ###   ########.fr       */
+/*   Updated: 2025/01/10 17:31:51 by mjuicha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,8 +182,6 @@ t_info	*get_hw(t_game *game)
 	info = malloc(sizeof(t_info));
 	if (!info)
 		return (NULL);
-	printf("game->height is %d\n", game->height);
-	printf("game->width is %d\n", game->width);
 	info->height = HEIGHT / game->height;
 	info->width = WIDTH / game->width;
 	return (info);
@@ -199,18 +197,133 @@ t_game	*get_info(t_game *game)
 		i++;
 	game->height = i;
 	game->info = get_hw(game);
-	printf("height is %d\n", game->info->height);
-	printf("width is %d\n", game->info->width);
 	return (game);
+}
+
+int	close_window(t_game *game)
+{
+	mlx_destroy_window(game->mlx, game->mlx_win);
+	printf("window closed\n");
+	exit(0);
+}
+
+int	esc_key(int keycode, t_game *game)
+{
+	if (keycode == 53)
+		close_window(game);
+	return (0);
+}
+
+long	get_time(void)
+{
+	struct timeval	time;
+	long			c_time;
+
+	gettimeofday(&time, NULL);
+	c_time = time.tv_sec;
+	return (c_time);
+}
+
+int mouse_hook(int button, t_game *game)
+{
+	(void)game;
+	printf("button is %d\n", button);
+	return (0);
+}
+
+void	events_hook(t_game *game)
+{
+	mlx_hook(game->mlx_win, 2, 0, esc_key, game);
+	mlx_hook(game->mlx_win, 17, 0, close_window, game);
+}
+
+t_game	*get_player_pos(t_game *game)
+{
+	int i;
+	int j;
+	game->player = malloc(sizeof(t_player));
+	if (!game->player)
+		return (NULL);
+	i = 0;
+	while (game->map[i])
+	{
+		j = 0;
+		while (game->map[i][j])
+		{
+			if (game->map[i][j] && game->map[i][j] == 'P')
+			{
+				game->player->player_x = j;
+				game->player->player_y = i;
+				printf("%d%d\n", i,j);
+				break ;
+			}
+			j++;
+		}
+		i++;
+	}
+	return (game);
+}
+
+void	rectangle(int x, int y, t_game *game)
+{
+	int lim = x + 48;
+	int lim2 = y + 48;
+	int orx = x;
+	int t = 0;
+
+	while (x < lim)
+	{
+		mlx_pixel_put(game->mlx, game->mlx_win, x, y, 0x00FF0000);
+		t = y;
+		while (t < lim2)
+			mlx_pixel_put(game->mlx, game->mlx_win, x, ++t, 0x00A1F000);
+		mlx_pixel_put(game->mlx, game->mlx_win, x, lim2, 0x00FF0000);
+		x++;
+	}
+	x = orx;
+	while (y < lim2)
+	{
+		mlx_pixel_put(game->mlx, game->mlx_win, x, y, 0x00FF0000);
+		mlx_pixel_put(game->mlx, game->mlx_win, lim, y, 0x00FF0000);
+		y++;
+	}	
+}
+
+void	draw_walls(t_game *game)
+{
+	int i = 0, j = 0;
+	int mx = 0, my = 0;
+	
+	while (i < HEIGHT)
+	{
+		j = 0;
+		mx = 0;
+		while (j < WIDTH)
+		{
+			if (game->map[my][mx] == '1')
+			{
+				rectangle(j, i, game);
+				printf("drawing %d \n", ++game->fake);
+			}
+			j += game->info->width;
+			mx++;
+		}
+		i += game->info->height;
+		my++;
+	}
 }
 
 t_game	*start_game(t_game *game)
 {
 	game = get_map(game);
+	game = get_player_pos(game);
 	game = get_info(game);
 	game->mlx = mlx_init();
 	game->mlx_win = mlx_new_window(game->mlx, WIDTH, HEIGHT, "cub3d");
-	
+	events_hook(game);
+	game->fake = 0;
+	draw_walls(game);
+	// player(game);
 	mlx_loop(game->mlx);
 	return (game);
 }

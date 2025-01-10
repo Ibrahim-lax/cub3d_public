@@ -6,7 +6,7 @@
 /*   By: mjuicha <mjuicha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 13:22:12 by mjuicha           #+#    #+#             */
-/*   Updated: 2025/01/01 19:04:38 by mjuicha          ###   ########.fr       */
+/*   Updated: 2025/01/10 17:12:52 by mjuicha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # define FAILURE    0
 
 # define WIDTH      480
-# define HEIGHT     320
+# define HEIGHT     480
 
 # define ERROR_ARG "\033[31mError: Wrong number of arguments\n\033[0m"
 # define ERROR_EXT "\033[31mError: Wrong extension\n\033[0m"
@@ -44,15 +44,27 @@ typedef struct s_info
     int     width;
 }               t_info;
 
+typedef struct s_player
+{
+    int     player_x;
+    int     player_y;
+}               t_player;
+
 typedef struct s_game
 {
     void    *mlx;
     void    *mlx_win;
+    void    *img;
+    
     char    **map;
+    
     t_info  *info;
+    t_player *player;
+    
     int     width;
     int     height;
     int     mapfd;
+    int fake;
 }               t_game;
 
 /***********************  utils  ***********************/
