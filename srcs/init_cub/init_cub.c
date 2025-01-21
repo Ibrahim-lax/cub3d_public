@@ -6,7 +6,7 @@
 /*   By: mjuicha <mjuicha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 13:34:45 by mjuicha           #+#    #+#             */
-/*   Updated: 2025/01/10 17:31:51 by mjuicha          ###   ########.fr       */
+/*   Updated: 2025/01/21 14:38:55 by mjuicha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,10 +207,25 @@ int	close_window(t_game *game)
 	exit(0);
 }
 
-int	esc_key(int keycode, t_game *game)
+int	keys(int keycode, t_game *game)
 {
-	if (keycode == 53)
+	if (keycode == ESC)
 		close_window(game);
+	if (keycode == W)
+		game->player->player_y -= MS;
+	else if (keycode == S)
+		game->player->player_y += MS;
+	else if (keycode == A)
+		game->player->player_x -= MS;
+	else if (keycode == D)
+		game->player->player_x += MS;
+	else if (keycode == LEFT)
+		game->angle -= ANGLE;
+	else if (keycode == RIGHT)
+		game->angle += ANGLE;
+	mlx_clear_window(game->mlx, game->mlx_win);
+	draw_walls(game);
+	player(game);
 	return (0);
 }
 
@@ -233,7 +248,7 @@ int mouse_hook(int button, t_game *game)
 
 void	events_hook(t_game *game)
 {
-	mlx_hook(game->mlx_win, 2, 0, esc_key, game);
+	mlx_hook(game->mlx_win, 2, 0, keys, game);
 	mlx_hook(game->mlx_win, 17, 0, close_window, game);
 }
 
@@ -254,7 +269,7 @@ t_game	*get_player_pos(t_game *game)
 			{
 				game->player->player_x = j;
 				game->player->player_y = i;
-				printf("%d%d\n", i,j);
+				printf("i am in %d %d\n", i, j);
 				break ;
 			}
 			j++;
@@ -264,7 +279,7 @@ t_game	*get_player_pos(t_game *game)
 	return (game);
 }
 
-void	rectangle(int x, int y, t_game *game)
+void	rectangle(int x, int y, t_game *game, int color)
 {
 	int lim = x + 48;
 	int lim2 = y + 48;
@@ -273,18 +288,18 @@ void	rectangle(int x, int y, t_game *game)
 
 	while (x < lim)
 	{
-		mlx_pixel_put(game->mlx, game->mlx_win, x, y, 0x00FF0000);
+		mlx_pixel_put(game->mlx, game->mlx_win, x, y, color);
 		t = y;
 		while (t < lim2)
-			mlx_pixel_put(game->mlx, game->mlx_win, x, ++t, 0x00A1F000);
-		mlx_pixel_put(game->mlx, game->mlx_win, x, lim2, 0x00FF0000);
+			mlx_pixel_put(game->mlx, game->mlx_win, x, ++t, color);
+		mlx_pixel_put(game->mlx, game->mlx_win, x, lim2, color);
 		x++;
 	}
 	x = orx;
 	while (y < lim2)
 	{
-		mlx_pixel_put(game->mlx, game->mlx_win, x, y, 0x00FF0000);
-		mlx_pixel_put(game->mlx, game->mlx_win, lim, y, 0x00FF0000);
+		mlx_pixel_put(game->mlx, game->mlx_win, x, y, color);
+		mlx_pixel_put(game->mlx, game->mlx_win, lim, y, color);
 		y++;
 	}	
 }
@@ -301,16 +316,102 @@ void	draw_walls(t_game *game)
 		while (j < WIDTH)
 		{
 			if (game->map[my][mx] == '1')
-			{
-				rectangle(j, i, game);
-				printf("drawing %d \n", ++game->fake);
-			}
+				rectangle(j, i, game, BLACK);
+			else if (game->map[my][mx] == '0')
+				rectangle(j, i, game, WHITE);
 			j += game->info->width;
 			mx++;
 		}
 		i += game->info->height;
 		my++;
 	}
+}
+
+void	pl(t_game *game)
+{
+	int x = game->player->player_x * game->info->width + (48 / 2);
+	int y = game->player->player_y * game->info->height + (48 / 2);
+	int maxx = x + CTE;
+	int minx = x - CTE;
+	int maxy = y + CTE;
+	int miny = y - CTE;
+	int i = miny;
+	int j;
+	while (i < maxy)
+	{
+		j = minx;
+		while (j < maxx)
+		{
+			mlx_pixel_put(game->mlx, game->mlx_win, j, i, 0x00FF0000);
+			j++;
+		}
+		i++;
+	}
+}
+
+int	gx(int x, int y,int i, int j, t_game *game)
+{
+	if (game->angle == 0)
+		return (j);
+	return (round(x + (j - x) * cos(game->angle * M_PI / 180) - (i - y) * sin(game->angle * M_PI / 180)));
+}
+
+int	gy(int x, int y, int i, int j, t_game *game)
+{
+	if (game->angle == 0)
+		return (i);
+	return (round(y + (j - x) * sin(game->angle * M_PI / 180) + (i - y) * cos(game->angle * M_PI / 180)));
+}
+
+void	bresenhams_line(int x, int y, int endx, int endy, t_game *game)
+{
+	int dx = abs(endx - x);
+	int dy = abs(endy - y);
+	int sx = x < endx ? 1 : -1;
+	int sy = y < endy ? 1 : -1;
+	int err = dx - dy;
+	int e2;
+
+	while (1)
+	{
+		mlx_pixel_put(game->mlx, game->mlx_win, x, y, YELLOW);
+		if (x == endx && y == endy)
+			break ;
+		e2 = 2 * err;
+		if (e2 > -dy)
+		{
+			err -= dy;
+			x += sx;
+		}
+		if (e2 < dx)
+		{
+			err += dx;
+			y += sy;
+		}
+	}
+}
+
+void	eye(t_game *game)
+{
+	int x = game->player->player_x * game->info->width + (48 / 2);
+	int y = game->player->player_y * game->info->height + (48 / 2);
+	int maxy = y - CTE;
+	int endx = gx(x, y, maxy, x, game);
+	int endy = gy(x, y, maxy, x, game);
+	// int i = y;
+	bresenhams_line(x, y, endx, endy, game);
+	// while (i >= maxy)
+	// {
+		// mlx_pixel_put(game->mlx, game->mlx_win, gx(x, y, i, x, game), gy(x, y, i, x, game), YELLOW);
+		// i--;
+	// }
+}
+
+void	player(t_game *game)
+{
+	pl(game);
+	eye(game);
+	printf("angle is %f\n", game->angle);
 }
 
 t_game	*start_game(t_game *game)
@@ -320,10 +421,11 @@ t_game	*start_game(t_game *game)
 	game = get_info(game);
 	game->mlx = mlx_init();
 	game->mlx_win = mlx_new_window(game->mlx, WIDTH, HEIGHT, "cub3d");
+	game->angle = 0;
 	events_hook(game);
 	game->fake = 0;
 	draw_walls(game);
-	// player(game);
+	player(game);
 	mlx_loop(game->mlx);
 	return (game);
 }
