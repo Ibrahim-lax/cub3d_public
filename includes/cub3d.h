@@ -6,7 +6,7 @@
 /*   By: mjuicha <mjuicha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 13:22:12 by mjuicha           #+#    #+#             */
-/*   Updated: 2025/01/21 14:34:41 by mjuicha          ###   ########.fr       */
+/*   Updated: 2025/01/21 16:48:08 by mjuicha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 # define LEFT       123
 # define RIGHT      124
 /***********************  movement  ***********************/
-# define MS         1
-# define CTE        50
+# define MS         0.2
+# define CTE        5
 # define ANGLE      10
 /***********************  colors  *************************/
 # define BLACK      0x00000000

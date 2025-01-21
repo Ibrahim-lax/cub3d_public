@@ -6,7 +6,7 @@
 /*   By: mjuicha <mjuicha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 13:34:45 by mjuicha           #+#    #+#             */
-/*   Updated: 2025/01/21 14:38:55 by mjuicha          ###   ########.fr       */
+/*   Updated: 2025/01/21 16:51:28 by mjuicha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,17 +207,43 @@ int	close_window(t_game *game)
 	exit(0);
 }
 
+int	valid_position(t_game *game, int pos_x, int pos_y)
+{
+	(void)game;
+	if (game->map[pos_y][pos_x] == '1')
+		return (0);
+	return (1);
+}
+
+int	check_wall(t_game *game, int keycode)
+{
+	int pos_x = game->player->player_x;
+	int pos_y = game->player->player_y;
+
+	if (keycode == W)
+		pos_y -= MS;
+	else if (keycode == S)
+		pos_y += MS;
+	else if (keycode == A)
+		pos_x -= MS;
+	else if (keycode == D)
+		pos_x += MS;
+	if (valid_position(game, pos_x, pos_y))
+		return (1);
+	return (0);
+}
+
 int	keys(int keycode, t_game *game)
 {
 	if (keycode == ESC)
 		close_window(game);
-	if (keycode == W)
+	if (keycode == W && check_wall(game, keycode))
 		game->player->player_y -= MS;
-	else if (keycode == S)
+	else if (keycode == S && check_wall(game, keycode))
 		game->player->player_y += MS;
-	else if (keycode == A)
+	else if (keycode == A && check_wall(game, keycode))
 		game->player->player_x -= MS;
-	else if (keycode == D)
+	else if (keycode == D && check_wall(game, keycode))
 		game->player->player_x += MS;
 	else if (keycode == LEFT)
 		game->angle -= ANGLE;
@@ -257,6 +283,7 @@ t_game	*get_player_pos(t_game *game)
 	int i;
 	int j;
 	game->player = malloc(sizeof(t_player));
+	game->
 	if (!game->player)
 		return (NULL);
 	i = 0;
@@ -317,7 +344,7 @@ void	draw_walls(t_game *game)
 		{
 			if (game->map[my][mx] == '1')
 				rectangle(j, i, game, BLACK);
-			else if (game->map[my][mx] == '0')
+			else if (game->map[my][mx] == '0' || game->map[my][mx] == 'P')
 				rectangle(j, i, game, WHITE);
 			j += game->info->width;
 			mx++;
@@ -330,7 +357,9 @@ void	draw_walls(t_game *game)
 void	pl(t_game *game)
 {
 	int x = game->player->player_x * game->info->width + (48 / 2);
+	printf("x is %d\n", x);
 	int y = game->player->player_y * game->info->height + (48 / 2);
+	printf("y is %d\n", y);
 	int maxx = x + CTE;
 	int minx = x - CTE;
 	int maxy = y + CTE;
@@ -398,13 +427,7 @@ void	eye(t_game *game)
 	int maxy = y - CTE;
 	int endx = gx(x, y, maxy, x, game);
 	int endy = gy(x, y, maxy, x, game);
-	// int i = y;
 	bresenhams_line(x, y, endx, endy, game);
-	// while (i >= maxy)
-	// {
-		// mlx_pixel_put(game->mlx, game->mlx_win, gx(x, y, i, x, game), gy(x, y, i, x, game), YELLOW);
-		// i--;
-	// }
 }
 
 void	player(t_game *game)
