@@ -6,7 +6,7 @@
 /*   By: mjuicha <mjuicha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 13:34:45 by mjuicha           #+#    #+#             */
-/*   Updated: 2025/01/21 16:51:28 by mjuicha          ###   ########.fr       */
+/*   Updated: 2025/01/22 03:15:21 by mjuicha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,15 +210,18 @@ int	close_window(t_game *game)
 int	valid_position(t_game *game, int pos_x, int pos_y)
 {
 	(void)game;
-	if (game->map[pos_y][pos_x] == '1')
+	int px = pos_x / game->info->width;
+	int py = pos_y / game->info->height;
+	printf("px is %d and py is %d\n", px, py);
+	if (game->map[py][px] == '1')
 		return (0);
 	return (1);
 }
 
 int	check_wall(t_game *game, int keycode)
 {
-	int pos_x = game->player->player_x;
-	int pos_y = game->player->player_y;
+	int pos_x = game->player->px_x;
+	int pos_y = game->player->px_y;
 
 	if (keycode == W)
 		pos_y -= MS;
@@ -238,13 +241,13 @@ int	keys(int keycode, t_game *game)
 	if (keycode == ESC)
 		close_window(game);
 	if (keycode == W && check_wall(game, keycode))
-		game->player->player_y -= MS;
+		game->player->px_y -= MS;
 	else if (keycode == S && check_wall(game, keycode))
-		game->player->player_y += MS;
+		game->player->px_y += MS;
 	else if (keycode == A && check_wall(game, keycode))
-		game->player->player_x -= MS;
+		game->player->px_x -= MS;
 	else if (keycode == D && check_wall(game, keycode))
-		game->player->player_x += MS;
+		game->player->px_x += MS;
 	else if (keycode == LEFT)
 		game->angle -= ANGLE;
 	else if (keycode == RIGHT)
@@ -283,7 +286,6 @@ t_game	*get_player_pos(t_game *game)
 	int i;
 	int j;
 	game->player = malloc(sizeof(t_player));
-	game->
 	if (!game->player)
 		return (NULL);
 	i = 0;
@@ -296,7 +298,8 @@ t_game	*get_player_pos(t_game *game)
 			{
 				game->player->player_x = j;
 				game->player->player_y = i;
-				printf("i am in %d %d\n", i, j);
+				game->player->px_x = j * game->info->width + (48 / 2);
+				game->player->px_y = i * game->info->height + (48 / 2);
 				break ;
 			}
 			j++;
@@ -356,10 +359,9 @@ void	draw_walls(t_game *game)
 
 void	pl(t_game *game)
 {
-	int x = game->player->player_x * game->info->width + (48 / 2);
-	printf("x is %d\n", x);
-	int y = game->player->player_y * game->info->height + (48 / 2);
-	printf("y is %d\n", y);
+	int x = game->player->px_x;
+	printf("yo %d\n", x);
+	int y = game->player->px_y;
 	int maxx = x + CTE;
 	int minx = x - CTE;
 	int maxy = y + CTE;
@@ -440,8 +442,8 @@ void	player(t_game *game)
 t_game	*start_game(t_game *game)
 {
 	game = get_map(game);
-	game = get_player_pos(game);
 	game = get_info(game);
+	game = get_player_pos(game);
 	game->mlx = mlx_init();
 	game->mlx_win = mlx_new_window(game->mlx, WIDTH, HEIGHT, "cub3d");
 	game->angle = 0;

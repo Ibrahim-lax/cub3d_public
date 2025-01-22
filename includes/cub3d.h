@@ -6,7 +6,7 @@
 /*   By: mjuicha <mjuicha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 13:22:12 by mjuicha           #+#    #+#             */
-/*   Updated: 2025/01/21 16:48:08 by mjuicha          ###   ########.fr       */
+/*   Updated: 2025/01/22 03:22:09 by mjuicha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # define LEFT       123
 # define RIGHT      124
 /***********************  movement  ***********************/
-# define MS         0.2
+# define MS         5
 # define CTE        5
 # define ANGLE      10
 /***********************  colors  *************************/
@@ -66,7 +66,10 @@ typedef struct s_player
 {
     float     player_x;
     float     player_y;
+    int       px_x;
+    int       px_y;
 }               t_player;
+
 
 typedef struct s_game
 {
