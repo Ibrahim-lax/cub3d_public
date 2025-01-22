@@ -6,7 +6,7 @@
 /*   By: mjuicha <mjuicha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 13:22:12 by mjuicha           #+#    #+#             */
-/*   Updated: 2025/01/22 09:34:35 by mjuicha          ###   ########.fr       */
+/*   Updated: 2025/01/22 10:01:22 by mjuicha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,14 @@
 # define LEFT       123
 # define RIGHT      124
 /***********************  movement  ***********************/
-# define MS         4
-# define CTE        5
+# define MS         8
+# define CTE        15
 # define ANGLE      10
 /***********************  colors  *************************/
 # define BLACK      0x00000000
 # define WHITE      0x00FFFFFF
 # define YELLOW     0x00FFFF00
+# define BLUE       0x000000FF
 /***********************  errors  *************************/
 # define ERROR_ARG "\033[31mError: Wrong number of arguments\n\033[0m"
 # define ERROR_EXT "\033[31mError: Wrong extension\n\033[0m"

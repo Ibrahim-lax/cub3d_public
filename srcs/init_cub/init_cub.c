@@ -6,7 +6,7 @@
 /*   By: mjuicha <mjuicha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 13:34:45 by mjuicha           #+#    #+#             */
-/*   Updated: 2025/01/22 09:33:38 by mjuicha          ###   ########.fr       */
+/*   Updated: 2025/01/22 10:02:28 by mjuicha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,14 +212,14 @@ int	valid_position(t_game *game, int pos_x, int pos_y)
 	(void)game;
 	int px = pos_x / game->info->width;
 	int py = pos_y / game->info->height;
-	printf("px is %d and py is %d\n", px, py);
-	if (game->map[py][px] == '0')
+	printf("px is %d and py is %d char is %c\n", px, py, game->map[py][px]);
+	if (game->map[py][px] != '1')
 	{
 		printf("....x is %d and y is %d\n", pos_x, pos_y);
-		if (game->map[(pos_y - CTE) / game->info->height][(pos_x - CTE) / game->info->width] == '0' &&
-			game->map[(pos_y - CTE) / game->info->height][(pos_x + CTE) / game->info->width] == '0' &&
-			game->map[(pos_y + CTE) / game->info->height][(pos_x - CTE) / game->info->width] == '0' &&
-			game->map[(pos_y + CTE) / game->info->height][(pos_x + CTE) / game->info->width] == '0')
+		if (game->map[(pos_y - CTE) / game->info->height][(pos_x - CTE) / game->info->width] != '1' &&
+			game->map[(pos_y - CTE) / game->info->height][(pos_x + CTE) / game->info->width] != '1' &&
+			game->map[(pos_y + CTE) / game->info->height][(pos_x - CTE) / game->info->width] != '1' &&
+			game->map[(pos_y + CTE) / game->info->height][(pos_x + CTE) / game->info->width] != '1')
 			return (1);
 	}
 	return (0);
@@ -412,7 +412,7 @@ void	bresenhams_line(int x, int y, int endx, int endy, t_game *game)
 
 	while (1)
 	{
-		mlx_pixel_put(game->mlx, game->mlx_win, x, y, YELLOW);
+		mlx_pixel_put(game->mlx, game->mlx_win, x, y, BLUE);
 		if (x == endx && y == endy)
 			break ;
 		e2 = 2 * err;
@@ -431,8 +431,8 @@ void	bresenhams_line(int x, int y, int endx, int endy, t_game *game)
 
 void	eye(t_game *game)
 {
-	int x = game->player->player_x * game->info->width + (48 / 2);
-	int y = game->player->player_y * game->info->height + (48 / 2);
+	int x = game->player->px_x;
+	int y = game->player->px_y;
 	int maxy = y - CTE;
 	int endx = gx(x, y, maxy, x, game);
 	int endy = gy(x, y, maxy, x, game);
