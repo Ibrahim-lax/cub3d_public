@@ -6,7 +6,7 @@
 /*   By: mjuicha <mjuicha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 13:34:45 by mjuicha           #+#    #+#             */
-/*   Updated: 2025/01/22 03:15:21 by mjuicha          ###   ########.fr       */
+/*   Updated: 2025/01/22 09:33:38 by mjuicha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,9 +213,16 @@ int	valid_position(t_game *game, int pos_x, int pos_y)
 	int px = pos_x / game->info->width;
 	int py = pos_y / game->info->height;
 	printf("px is %d and py is %d\n", px, py);
-	if (game->map[py][px] == '1')
-		return (0);
-	return (1);
+	if (game->map[py][px] == '0')
+	{
+		printf("....x is %d and y is %d\n", pos_x, pos_y);
+		if (game->map[(pos_y - CTE) / game->info->height][(pos_x - CTE) / game->info->width] == '0' &&
+			game->map[(pos_y - CTE) / game->info->height][(pos_x + CTE) / game->info->width] == '0' &&
+			game->map[(pos_y + CTE) / game->info->height][(pos_x - CTE) / game->info->width] == '0' &&
+			game->map[(pos_y + CTE) / game->info->height][(pos_x + CTE) / game->info->width] == '0')
+			return (1);
+	}
+	return (0);
 }
 
 int	check_wall(t_game *game, int keycode)
@@ -436,7 +443,7 @@ void	player(t_game *game)
 {
 	pl(game);
 	eye(game);
-	printf("angle is %f\n", game->angle);
+	// printf("angle is %f\n", game->angle);
 }
 
 t_game	*start_game(t_game *game)
