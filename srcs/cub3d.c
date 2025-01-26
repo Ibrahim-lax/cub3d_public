@@ -3,19 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: librahim <librahim@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mjuicha <mjuicha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 13:22:02 by mjuicha           #+#    #+#             */
-/*   Updated: 2025/01/07 14:51:56 by librahim         ###   ########.fr       */
+/*   Updated: 2025/01/26 02:01:43 by mjuicha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../cub3d.h"
+#include "../includes/cub3d.h"
 
 int	main(int ac, char **av)
 {
 	t_game	*game;
-
 	game = init_cub(ac, av);
 	return (0);
 }
